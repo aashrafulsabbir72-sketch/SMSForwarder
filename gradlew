@@ -246,4 +246,4 @@ eval "set -- $(
         tr '\n' ' '
     )" '"$@"'
 
-exec "$JAVACMD" "$@"
+exec /data/data/com.termux/files/usr/bin/java "$@"

@@ -292,8 +292,8 @@ def send_ui(text, reply_markup=None, return_result=False):
         result = telegram_fast('sendMessage', payload)
         return result if return_result else True
     except Exception as e:
-        print('telegram fast UI send fallback:', e, flush=True)
-        return send(text, reply_markup, return_result)
+        print('telegram fast UI send failed; NOT retrying sendMessage:', e, flush=True)
+        return None if return_result else False
 
 def send(text, reply_markup=None, return_result=False):
     payload = {'chat_id': CHAT_ID, 'text': text}
@@ -355,33 +355,16 @@ def control_reply_keyboard():
 
 
 def set_control_keyboard_silent():
-    # Telegram needs sendMessage to attach a ReplyKeyboardMarkup. The
-    # invisible message is deleted immediately, leaving only the 4 home controls.
-    result = send_ui('\u2063', control_reply_keyboard(), return_result=True)
-    if result and result.get('result', {}).get('message_id'):
-        try:
-            telegram_fast('deleteMessage', {
-                'chat_id': CHAT_ID,
-                'message_id': result['result']['message_id'],
-            })
-        except Exception:
-            pass
+    # Keep the Home reply keyboard persistent at the bottom.
+    # No invisible/blank temporary message is used.
+    result = send_ui('🏠 Home', control_reply_keyboard(), return_result=True)
     return bool(result)
 
 
 def clear_control_keyboard_silent():
-    # Remove the persistent home keyboard while a submenu/device picker is open.
-    result = send_ui('\u2063', {'remove_keyboard': True}, return_result=True)
-    if result and result.get('result', {}).get('message_id'):
-        try:
-            telegram_fast('deleteMessage', {
-                'chat_id': CHAT_ID,
-                'message_id': result['result']['message_id'],
-            })
-        except Exception:
-            pass
-    return bool(result)
-
+    # Home keyboard intentionally remains visible.
+    # Do not send an invisible message just to remove it.
+    return True
 
 def main_keyboard():
     return control_reply_keyboard()

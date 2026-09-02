@@ -7,3 +7,11 @@ app/build/
 backend/*.db
 backend/telegram_offset.txt
 backend/__pycache__/
+backend/.env
+backend/*.log
+backend/*.pid
+backend/server.py.backup*
+backend/server.py.before_*
+backend/server.py.fast_backup*
+backend/server.py.syntax_broken*
+backend/server.py.v15_backup*
