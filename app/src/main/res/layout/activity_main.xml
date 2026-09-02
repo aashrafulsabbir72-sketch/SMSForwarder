@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="#F0F4F8">
+  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+      android:orientation="vertical" android:padding="20dp">
+    <TextView android:id="@+id/tvTitle" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:textSize="22sp" android:textStyle="bold" android:textColor="#0D47A1" android:paddingBottom="2dp"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="bKash and Nagad SMS to Telegram" android:textSize="12sp" android:textColor="#757575"
+        android:paddingBottom="14dp"/>
+    <TextView android:id="@+id/statusText" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:textSize="13sp" android:padding="12dp" android:background="#E3F2FD" android:layout_marginBottom="8dp"/>
+    <TextView android:id="@+id/statsText" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:textSize="12sp" android:padding="10dp" android:background="#E8F5E9" android:layout_marginBottom="14dp"/>
+    <Button android:id="@+id/pauseButton" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:textColor="#FFFFFF" android:backgroundTint="#00897B" android:text="PAUSE SMS COLLECTION"
+        android:layout_marginBottom="8dp"/>
+    <Button android:id="@+id/configButton" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:backgroundTint="#5E35B1" android:textColor="#FFFFFF" android:text="TELEGRAM CONTROL SETUP"
+        android:layout_marginBottom="8dp"/>
+    <Button android:id="@+id/grantButton" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:backgroundTint="#0D47A1" android:textColor="#FFFFFF" android:text="GRANT SMS PERMISSION"
+        android:layout_marginBottom="8dp"/>
+    <Button android:id="@+id/batteryButton" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:backgroundTint="#F57C00" android:textColor="#FFFFFF" android:text="DISABLE BATTERY OPTIMIZATION"
+        android:layout_marginBottom="8dp"/>
+    <Button android:id="@+id/testButton" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:backgroundTint="#43A047" android:textColor="#FFFFFF" android:text="SEND TEST MESSAGE"
+        android:layout_marginBottom="8dp"/>
+    <Button android:id="@+id/viewLogButton" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:backgroundTint="#6A1B9A" android:textColor="#FFFFFF" android:text="VIEW LOG"/>
+  </LinearLayout>
+</ScrollView>
