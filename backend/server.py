@@ -1,3 +1,57 @@
+V16_ONLINE_TIMEOUT = 15
+
+V16_HELP_TEXT = """📖 SMS FORWARDER — COMMAND LIST
+
+/start
+Open control panel
+
+/help
+Show all available commands
+
+▶️ /resume
+Resume device service
+
+⏸ /pause
+Pause device service
+
+📊 /status
+Show device status
+
+📱 /devices
+Show connected devices
+
+ℹ️ /info
+Show device information
+
+🩺 /health
+Check device health
+
+🌐 /backend
+Check backend status
+
+📋 /logs
+Show recent logs
+
+🧪 /test
+Test device command
+
+🧹 /clearlog
+Clear device log
+
+🔄 /resetstats
+Reset statistics
+
+♻️ /reload
+Reload listener
+
+🔄 /restart
+Restart service
+
+🔁 /reregister
+Register device again
+"""
+
+_v16_register_commands()
 #!/usr/bin/env python3
 import json, os, sqlite3, threading, time, uuid, subprocess, shutil
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
