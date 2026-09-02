@@ -1,63 +1,27 @@
-V16_ONLINE_TIMEOUT = 15
-
-V16_HELP_TEXT = """📖 SMS FORWARDER — COMMAND LIST
-
-/start
-Open control panel
-
-/help
-Show all available commands
-
-▶️ /resume
-Resume device service
-
-⏸ /pause
-Pause device service
-
-📊 /status
-Show device status
-
-📱 /devices
-Show connected devices
-
-ℹ️ /info
-Show device information
-
-🩺 /health
-Check device health
-
-🌐 /backend
-Check backend status
-
-📋 /logs
-Show recent logs
-
-🧪 /test
-Test device command
-
-🧹 /clearlog
-Clear device log
-
-🔄 /resetstats
-Reset statistics
-
-♻️ /reload
-Reload listener
-
-🔄 /restart
-Restart service
-
-🔁 /reregister
-Register device again
-"""
-
-_v16_register_commands()
 #!/usr/bin/env python3
 import json, os, sqlite3, threading, time, uuid, subprocess, shutil
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
+
+# Load backend/.env using only Python standard library.
+_ENV_FILE = os.path.join(os.path.dirname(__file__), '.env')
+if os.path.isfile(_ENV_FILE):
+    try:
+        with open(_ENV_FILE, 'r', encoding='utf-8') as _env_file:
+            for _env_line in _env_file:
+                _env_line = _env_line.strip()
+                if not _env_line or _env_line.startswith('#') or '=' not in _env_line:
+                    continue
+                _env_key, _env_value = _env_line.split('=', 1)
+                _env_key = _env_key.strip()
+                _env_value = _env_value.strip()
+                if len(_env_value) >= 2 and _env_value[0] == _env_value[-1] and _env_value[0] in ('"', "'"):
+                    _env_value = _env_value[1:-1]
+                os.environ.setdefault(_env_key, _env_value)
+    except OSError:
+        pass
 
 HOST = os.getenv('HOST', '127.0.0.1')
 PORT = int(os.getenv('PORT', '8888'))
@@ -599,14 +563,14 @@ def bot_loop():
                     data = str(cb.get('data', ''))
                     # Acknowledge immediately so Telegram clears the spinner.
                     answer_callback(str(cb.get('id', '')))
-                    # Clear the tapped inline keyboard immediately. This makes every
-                    # submenu/device picker single-use and prevents stale double taps.
+                    # Remove the tapped inline UI message completely.
+                    # Keeping it with an empty inline keyboard creates blank/stale
+                    # messages and makes the Telegram UI look duplicated.
                     if msg.get('message_id'):
                         try:
-                            telegram_fast('editMessageReplyMarkup', {
+                            telegram_fast('deleteMessage', {
                                 'chat_id': CHAT_ID,
                                 'message_id': msg.get('message_id'),
-                                'reply_markup': {'inline_keyboard': []},
                             })
                         except Exception:
                             pass
