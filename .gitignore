@@ -1,0 +1,9 @@
+**/__pycache__/
+*.pyc
+.gradle/
+build/
+app/build/
+
+backend/*.db
+backend/telegram_offset.txt
+backend/__pycache__/

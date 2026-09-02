@@ -1,0 +1,18 @@
+serverAddr = "8.217.64.173"
+serverPort = 27000
+auth.token = "luma"
+
+transport.tcpMuxKeepaliveInterval = -1
+
+
+log.to = "log.txt"
+
+[[proxies]]
+name = "droid29120"
+type = "tcp"
+localPort = 8899
+remotePort = 29120
+
+#username = "passby"
+#password = "qazwsx123"
+#useEncryption = true

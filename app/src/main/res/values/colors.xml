@@ -1,0 +1,14 @@
+<resources>
+    <color name="sf_navy">#0B1220</color>
+    <color name="sf_blue">#1565C0</color>
+    <color name="sf_blue_dark">#0D47A1</color>
+    <color name="sf_teal">#00897B</color>
+    <color name="sf_green">#2E9E44</color>
+    <color name="sf_orange">#F57C00</color>
+    <color name="sf_purple">#6A1B9A</color>
+    <color name="sf_red">#D32F2F</color>
+    <color name="sf_bg">#F4F7FB</color>
+    <color name="sf_text">#162033</color>
+    <color name="sf_muted">#6B7280</color>
+    <color name="sf_card">#FFFFFF</color>
+</resources>
