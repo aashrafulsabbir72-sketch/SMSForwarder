@@ -355,16 +355,71 @@ def control_reply_keyboard():
 
 
 def set_control_keyboard_silent():
-    # Keep the Home reply keyboard persistent at the bottom.
-    # No invisible/blank temporary message is used.
-    result = send_ui('🏠 Home', control_reply_keyboard(), return_result=True)
-    return bool(result)
+    """
+    Enterprise Home screen:
+    - Keep exactly one visible Home message.
+    - Keep the normal Reply Keyboard at the bottom.
+    - Remove the previous Home message before creating the replacement.
+    - Never create an empty/blank keyboard message.
+    """
+    home_file = os.path.join(os.path.dirname(__file__), 'telegram_home_message_id.txt')
+
+    old_id = None
+    try:
+        with open(home_file, encoding='utf-8') as f:
+            value = f.read().strip()
+            if value:
+                old_id = int(value)
+    except Exception:
+        old_id = None
+
+    if old_id:
+        try:
+            telegram_fast('deleteMessage', {
+                'chat_id': CHAT_ID,
+                'message_id': old_id,
+            })
+        except Exception:
+            pass
+
+    text = (
+        '🏠 SMS Forwarder Enterprise\n'
+        'Choose a control below.'
+    )
+
+    try:
+        res = telegram_fast('sendMessage', {
+            'chat_id': CHAT_ID,
+            'text': text,
+            'reply_markup': control_reply_keyboard(),
+        })
+
+        message_id = None
+        if isinstance(res, dict):
+            message_id = (res.get('result') or {}).get('message_id')
+
+        if message_id:
+            tmp = home_file + '.tmp'
+            with open(tmp, 'w', encoding='utf-8') as f:
+                f.write(str(message_id))
+                f.flush()
+                os.fsync(f.fileno())
+            os.replace(tmp, home_file)
+            return True
+
+    except Exception as e:
+        print('home keyboard error:', e, flush=True)
+
+    return False
 
 
 def clear_control_keyboard_silent():
-    # Home keyboard intentionally remains visible.
-    # Do not send an invisible message just to remove it.
+    """
+    Enterprise mode keeps the normal Home Reply Keyboard visible.
+    Do not send remove-keyboard/blank messages.
+    """
     return True
+
 
 def main_keyboard():
     return control_reply_keyboard()
@@ -774,8 +829,10 @@ def main():
     # running in a half-started backend.
     httpd = ReusableThreadingHTTPServer((HOST, PORT), Handler)
     print(f'Backend listening on {HOST}:{PORT}', flush=True)
-    threading.Thread(target=bot_loop, daemon=True, name='telegram-loop').start()
-    threading.Thread(target=retry_unsent_replies, daemon=True, name='reply-retry').start()
+    # TERMUX GATEWAY MODE:
+    # Telegram polling/reply delivery is owned by the VPS controller.
+    # Termux only exposes the authenticated device gateway/API.
+    print('Telegram polling: DISABLED (VPS controller owns Telegram)', flush=True)
     try:
         httpd.serve_forever()
     finally:
